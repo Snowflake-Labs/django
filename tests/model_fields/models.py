@@ -571,6 +571,7 @@ class GeneratedModelVirtual(models.Model):
         expression=F("a") + F("b"),
         output_field=models.IntegerField(),
         db_persist=False,
+        null=True,
     )
     fk = models.ForeignKey(Foo, on_delete=models.CASCADE, null=True, blank=True)
 
@@ -594,6 +595,7 @@ class GeneratedModelParamsVirtual(models.Model):
         expression=Value("Constant", output_field=models.CharField(max_length=10)),
         output_field=models.CharField(max_length=10),
         db_persist=False,
+        null=True,
     )
 
     class Meta:
@@ -618,6 +620,7 @@ class GeneratedModelOutputFieldDbCollationVirtual(models.Model):
         expression=Lower("name"),
         db_persist=False,
         output_field=models.CharField(db_collation=test_collation, max_length=11),
+        null=True,
     )
 
     class Meta:

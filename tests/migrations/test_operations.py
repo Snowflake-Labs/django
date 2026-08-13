@@ -3350,9 +3350,11 @@ class OperationTests(OperationTestBase):
         self.assertColumnExists("test_rnflut_pony", "blue")
         self.assertColumnNotExists("test_rnflut_pony", "pink")
         # The unique constraint has been ported over.
-        if getattr(connection.features, 'enforces_unique_constraints', True):
+        if getattr(connection.features, "enforces_unique_constraints", True):
             with connection.cursor() as cursor:
-                cursor.execute("INSERT INTO test_rnflut_pony (blue, weight) VALUES (1, 1)")
+                cursor.execute(
+                    "INSERT INTO test_rnflut_pony (blue, weight) VALUES (1, 1)"
+                )
                 with self.assertRaises(IntegrityError):
                     with atomic():
                         cursor.execute(
@@ -3666,17 +3668,23 @@ class OperationTests(OperationTestBase):
         )
         # Make sure we can insert duplicate rows
         with connection.cursor() as cursor:
-            if getattr(connection.features, 'enforces_unique_constraints', True):
-                cursor.execute('INSERT INTO test_alunto_pony (pink, weight) VALUES (1, 1)')
-                cursor.execute('INSERT INTO test_alunto_pony (pink, weight) VALUES (1, 1)')
-                cursor.execute('DELETE FROM test_alunto_pony')
+            if getattr(connection.features, "enforces_unique_constraints", True):
+                cursor.execute(
+                    "INSERT INTO test_alunto_pony (pink, weight) VALUES (1, 1)"
+                )
+                cursor.execute(
+                    "INSERT INTO test_alunto_pony (pink, weight) VALUES (1, 1)"
+                )
+                cursor.execute("DELETE FROM test_alunto_pony")
             # Test the database alteration
             with connection.schema_editor() as editor:
                 operation.database_forwards(
                     "test_alunto", editor, project_state, new_state
                 )
-            if getattr(connection.features, 'enforces_unique_constraints', True):
-                cursor.execute("INSERT INTO test_alunto_pony (pink, weight) VALUES (1, 1)")
+            if getattr(connection.features, "enforces_unique_constraints", True):
+                cursor.execute(
+                    "INSERT INTO test_alunto_pony (pink, weight) VALUES (1, 1)"
+                )
                 with self.assertRaises(IntegrityError):
                     with atomic():
                         cursor.execute(
@@ -3688,9 +3696,13 @@ class OperationTests(OperationTestBase):
                 operation.database_backwards(
                     "test_alunto", editor, new_state, project_state
                 )
-            if getattr(connection.features, 'enforces_unique_constraints', True):
-                cursor.execute("INSERT INTO test_alunto_pony (pink, weight) VALUES (1, 1)")
-                cursor.execute("INSERT INTO test_alunto_pony (pink, weight) VALUES (1, 1)")
+            if getattr(connection.features, "enforces_unique_constraints", True):
+                cursor.execute(
+                    "INSERT INTO test_alunto_pony (pink, weight) VALUES (1, 1)"
+                )
+                cursor.execute(
+                    "INSERT INTO test_alunto_pony (pink, weight) VALUES (1, 1)"
+                )
                 cursor.execute("DELETE FROM test_alunto_pony")
         # Test flat unique_together
         operation = migrations.AlterUniqueTogether("Pony", ("pink", "weight"))
@@ -6356,11 +6368,13 @@ class OperationTests(OperationTestBase):
             expression=F("pink") + F("pink"),
             output_field=models.IntegerField(),
             db_persist=db_persist,
+            null=True,
         )
         generated_2 = models.GeneratedField(
             expression=F("pink") + F("pink") + F("pink"),
             output_field=models.IntegerField(),
             db_persist=db_persist,
+            null=True,
         )
         tests = [
             ("test_igfc_1", regular, generated_1),
@@ -6398,6 +6412,7 @@ class OperationTests(OperationTestBase):
                 expression=F("pink") + F("pink"),
                 output_field=models.IntegerField(),
                 db_persist=db_persist,
+                null=True,
             ),
         )
         project_state, new_state = self.make_test_state(app_label, operation)
@@ -6414,6 +6429,7 @@ class OperationTests(OperationTestBase):
                     expression=F("renamed_pink"),
                     output_field=models.IntegerField(),
                     db_persist=db_persist,
+                    null=True,
                 ),
             ),
         ]
@@ -6477,6 +6493,7 @@ class OperationTests(OperationTestBase):
                 expression=F("pink") + F("pink"),
                 output_field=models.IntegerField(),
                 db_persist=db_persist,
+                null=True,
             ),
         )
         project_state, new_state = self.make_test_state(app_label, operation)
@@ -6541,6 +6558,7 @@ class OperationTests(OperationTestBase):
                 expression=F("pink") + F("pink"),
                 output_field=models.IntegerField(),
                 db_persist=db_persist,
+                null=True,
             ),
         )
         project_state, new_state = self.make_test_state(app_label, operation)

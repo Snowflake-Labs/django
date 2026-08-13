@@ -58,11 +58,13 @@ class GeneratedFieldVirtualProduct(models.Model):
         - Coalesce("discounted_price", Coalesce("price", 0)),
         output_field=models.IntegerField(),
         db_persist=False,
+        null=True,
     )
     lower_name = models.GeneratedField(
         expression=Lower(models.F("name")),
         output_field=models.CharField(max_length=255, null=True),
         db_persist=False,
+        null=True,
     )
 
     class Meta:
